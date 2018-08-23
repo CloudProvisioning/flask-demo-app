@@ -1,0 +1,7 @@
+body {
+    font-family: Consolas, monaco, monospace;
+}
+.container {
+    width: 768px;
+    margin: auto;
+}
