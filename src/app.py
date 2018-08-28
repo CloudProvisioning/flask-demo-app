@@ -2,14 +2,15 @@ from flask import Flask, render_template
 import psycopg2
 import json
 import random
+import os
 
 app = Flask(__name__)
 
 def get_db_connection():
     dbname = 'test'
     dbuser = 'test'
-    dbhost = '192.168.203.236'
-    dbport = 32408
+    dbhost = os.getenv("DB_ADDRESS", "192.168.203.236")
+    dbport = os.getenv("DB_PORT", 32408)
 
     connection = psycopg2.connect(database=dbname, user=dbuser, host=dbhost, port=dbport)
     return connection
