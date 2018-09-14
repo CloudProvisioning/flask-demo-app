@@ -9,8 +9,8 @@ app = Flask(__name__)
 def get_db_connection():
     dbname = 'test'
     dbuser = 'test'
-    dbhost = os.getenv("DB_ADDRESS", "192.168.203.236")
-    dbport = os.getenv("DB_PORT", 32408)
+    dbhost = 'cockroach-cockroachdb-public'
+    dbport = 26257
 
     connection = psycopg2.connect(database=dbname, user=dbuser, host=dbhost, port=dbport)
     return connection
