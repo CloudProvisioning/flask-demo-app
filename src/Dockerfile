@@ -12,7 +12,4 @@ RUN apk update && \
     
 EXPOSE 8000
 
-ENV DB_ADDRESS 192.168.203.236
-ENV DB_PORT 32408
-
 CMD python3 ./app.py
