@@ -85,14 +85,29 @@ def add_data():
         count = request.get_json()['count']
         connection = get_db_connection()
         cursor = connection.cursor()
-        values = generate_data(count)
-        sql_query = ''
-        for value in values:
-            subquery = "INSERT INTO people (first_name, last_name, age, employment, location, pet_name, favorite_color, server_id, add_timestamp) VALUES ('" + value.get('firstName') + "', '" + value.get('lastName') + "', " + str(value.get('age')) + ", '" + value.get('employment') + "', '" + value.get('location') + "', '" + value.get('petName') + "', '" + value.get('favoriteColor') + "', " + str(value.get('serverId')) + ", '" + value.get('addTimestamp') + "'); \n "
-            sql_query += subquery
 
-        cursor.execute(sql_query)
-        connection.commit()
+        queue_amount = 1000
+        ranges_quantity = count // queue_amount
+        data_reminder = count - queue_amount * ranges_quantity
+
+        for x in range(ranges_quantity):
+            values = generate_data(queue_amount)
+            sql_query = ''
+            for value in values:
+                subquery = "INSERT INTO people (first_name, last_name, age, employment, location, pet_name, favorite_color, server_id, add_timestamp) VALUES ('" + value.get('firstName') + "', '" + value.get('lastName') + "', " + str(value.get('age')) + ", '" + value.get('employment') + "', '" + value.get('location') + "', '" + value.get('petName') + "', '" + value.get('favoriteColor') + "', " + str(value.get('serverId')) + ", '" + value.get('addTimestamp') + "'); \n "
+                sql_query += subquery
+            cursor.execute(sql_query)
+            connection.commit()
+            sql_query = ''
+
+        if data_reminder != 0:
+            values = generate_data(data_reminder)
+            sql_query = ''
+            for value in values:
+                subquery = "INSERT INTO people (first_name, last_name, age, employment, location, pet_name, favorite_color, server_id, add_timestamp) VALUES ('" + value.get('firstName') + "', '" + value.get('lastName') + "', " + str(value.get('age')) + ", '" + value.get('employment') + "', '" + value.get('location') + "', '" + value.get('petName') + "', '" + value.get('favoriteColor') + "', " + str(value.get('serverId')) + ", '" + value.get('addTimestamp') + "'); \n "
+                sql_query += subquery
+            cursor.execute(sql_query)
+            connection.commit()
 
         cursor.close()
         connection.close()
